@@ -1,0 +1,36 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: identity-service
+
+  datasource:
+    url: ${IDENTITY_DB_URL:jdbc:postgresql://localhost:5433/identity_db}
+    username: ${IDENTITY_DB_USERNAME:identity_user}
+    password: ${IDENTITY_DB_PASSWORD:identity_local_dev}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+  endpoint:
+    health:
+      show-details: always
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000
+

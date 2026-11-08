@@ -1,0 +1,33 @@
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Java
+*.class
+*.log
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# IntelliJ IDEA
+.idea/
+*.iml
+out/
+
+# VS Code
+.vscode/
+
+# Operating system
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+docker-data/
+
+# Temporary files
+*.tmp
+*.bak
