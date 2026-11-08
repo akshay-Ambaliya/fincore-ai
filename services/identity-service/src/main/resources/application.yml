@@ -11,13 +11,12 @@ spring:
     password: ${IDENTITY_DB_PASSWORD:identity_local_dev}
     driver-class-name: org.postgresql.Driver
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
+    locations: classpath:db/migration
+
 
 management:
   endpoints:
