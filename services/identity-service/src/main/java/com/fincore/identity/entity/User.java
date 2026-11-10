@@ -1,6 +1,7 @@
 
 package com.fincore.identity.entity;
 
+import com.fincore.identity.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,6 +25,10 @@ public class User {
 
     @Column(nullable = false)
     private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 30)
+    private UserRole role = UserRole.USER;
 
     @Column(nullable = false, length = 100)
     private String firstName;

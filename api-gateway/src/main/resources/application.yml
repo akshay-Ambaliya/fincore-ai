@@ -16,6 +16,11 @@ spring:
               predicates:
                 - Path=/api/auth/**
 
+            - id: identity-admin
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/admin/**
+
             - id: identity-health
               uri: http://localhost:8082
               predicates:

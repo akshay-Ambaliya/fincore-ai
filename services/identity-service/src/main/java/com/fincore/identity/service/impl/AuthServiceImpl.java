@@ -5,6 +5,7 @@ import com.fincore.identity.dto.request.RegisterRequest;
 import com.fincore.identity.dto.response.RefreshTokenResponse;
 import com.fincore.identity.dto.response.RegisterResponse;
 import com.fincore.identity.entity.User;
+import com.fincore.identity.enums.UserRole;
 import com.fincore.identity.exceptions.EmailAlreadyExistsException;
 import com.fincore.identity.repository.UserRepository;
 import com.fincore.identity.service.AuthService;
@@ -47,6 +48,7 @@ public class AuthServiceImpl implements AuthService {
         response.setFirstName(savedUser.getFirstName());
         response.setLastName(savedUser.getLastName());
         response.setCreatedAt(savedUser.getCreatedAt());
+        user.setRole(UserRole.USER);
 
         return response;
     }

@@ -1,19 +1,16 @@
 package com.fincore.identity.exceptions;
 
 import com.fincore.identity.dto.response.ApiResponse;
-
-import com.fincore.identity.exceptions.EmailAlreadyExistsException;
-import com.fincore.identity.exceptions.InvalidRefreshTokenException;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -58,6 +55,21 @@ public class GlobalExceptionHandler {
                         null
                 ));
     }
+
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(
+            AccessDeniedException exception,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error(
+                        "Access denied. You don't have permission to access this resource.",
+                        request.getRequestURI(),
+                        null
+                ));
+    }
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Void>> handleValidationErrors(
