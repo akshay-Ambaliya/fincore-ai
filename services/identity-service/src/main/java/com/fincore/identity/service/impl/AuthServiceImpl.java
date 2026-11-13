@@ -26,6 +26,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final EmailVerificationServiceImpl emailVerificationService;
 
     @Override
     public RegisterResponse register(RegisterRequest request) {
@@ -40,7 +41,17 @@ public class AuthServiceImpl implements AuthService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
 
+        // Set default platform role
+        user.setRole(UserRole.USER);
+
+        // User must verify email before login
+        user.setEmailVerified(false);
+
+        // Save user first
         User savedUser = userRepository.save(user);
+
+        // Generate verification token and send email
+        emailVerificationService.sendVerificationEmail(savedUser);
 
         RegisterResponse response = new RegisterResponse();
         response.setId(savedUser.getId());
@@ -48,7 +59,6 @@ public class AuthServiceImpl implements AuthService {
         response.setFirstName(savedUser.getFirstName());
         response.setLastName(savedUser.getLastName());
         response.setCreatedAt(savedUser.getCreatedAt());
-        user.setRole(UserRole.USER);
 
         return response;
     }
@@ -65,6 +75,12 @@ public class AuthServiceImpl implements AuthService {
                 user.getPasswordHash())) {
 
             throw new BadCredentialsException("Invalid email or password");
+        }
+
+        if (!user.isEmailVerified()) {
+            throw new IllegalStateException(
+                    "Please verify your email address before logging in"
+            );
         }
 
         String accessToken = jwtService.generateAccessToken(user);

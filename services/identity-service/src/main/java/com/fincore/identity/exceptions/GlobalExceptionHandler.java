@@ -3,6 +3,7 @@ package com.fincore.identity.exceptions;
 import com.fincore.identity.dto.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
@@ -110,6 +112,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse<Void>> handleGenericException(
             Exception exception,
             HttpServletRequest request) {
+
+
+        log.error(
+                "Unexpected error occurred while processing request: {}",
+                request.getRequestURI(),
+                exception
+        );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error(

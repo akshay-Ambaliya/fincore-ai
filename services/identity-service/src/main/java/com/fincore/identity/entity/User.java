@@ -39,6 +39,9 @@ public class User {
     @Column(nullable = false)
     private boolean enabled = true;
 
+    @Column(name="email_verified",nullable = false)
+    private boolean emailVerified = false;
+
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
 

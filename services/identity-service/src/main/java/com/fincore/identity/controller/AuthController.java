@@ -11,6 +11,8 @@ import com.fincore.identity.dto.response.RegisterResponse;
 import com.fincore.identity.service.AuthService;
 import com.fincore.identity.service.RefreshTokenService;
 
+import com.fincore.identity.service.impl.EmailService;
+import com.fincore.identity.service.impl.EmailVerificationServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,8 @@ public class AuthController {
 
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
+    private final EmailService emailService;
+    private final EmailVerificationServiceImpl emailVerificationService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<RegisterResponse>> register(
@@ -89,5 +93,42 @@ public class AuthController {
                         null
                 )
         );
+    }
+
+
+    @GetMapping("/verify-email")
+    public ResponseEntity<ApiResponse<Void>> verifyEmail(
+            @RequestParam("token") String token,
+            HttpServletRequest httpRequest) {
+
+        emailVerificationService.verifyEmail(token);
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Email verified successfully",
+                        httpRequest.getRequestURI(),
+                        null
+                )
+        );
+    }
+
+    @GetMapping("/test-email")
+    public ResponseEntity<String> testEmail(@RequestParam("email") String email) {
+
+        System.out.println("STEP 1: Test email endpoint reached");
+
+        System.out.println("STEP 2: About to call EmailService");
+
+        emailService.sendTestEmail(email);
+
+        System.out.println("STEP 3: EmailService completed");
+
+        return ResponseEntity.ok("Email sent successfully");
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        System.out.println(">>> AUTH CONTROLLER REACHED <<<");
+        return ResponseEntity.ok("Auth Controller is working");
     }
 }

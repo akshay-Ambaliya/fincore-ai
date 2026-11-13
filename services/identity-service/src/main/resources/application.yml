@@ -2,6 +2,17 @@ server:
   port: 8082
 
 spring:
+  mail:
+    host: smtp-relay.brevo.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   application:
     name: identity-service
 
@@ -33,3 +44,6 @@ jwt:
   access-token-expiration: 900000
   refresh-token-expiration: 604800000
 
+app:
+  verification:
+    base-url: http://localhost:8082/api/auth/verify-email

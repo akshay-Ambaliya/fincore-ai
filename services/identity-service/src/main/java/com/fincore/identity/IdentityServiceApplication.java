@@ -8,6 +8,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class IdentityServiceApplication {
 
     public static void main(String[] args) {
+        System.out.println(">>> STARTING IDENTITY SERVICE <<<");
+
         SpringApplication.run(IdentityServiceApplication.class, args);
+
+        System.out.println(">>> IDENTITY SERVICE STARTED <<<");
     }
 }
