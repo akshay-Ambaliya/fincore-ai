@@ -16,6 +16,7 @@ import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.HexFormat;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -104,4 +105,19 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 
         refreshTokenRepository.save(refreshToken);
     }
+
+
+    @Override
+    public void revokeAllRefreshTokens(Long userId) {
+
+        List<RefreshToken> refreshTokens =
+                refreshTokenRepository.findAllByUserId(userId);
+
+        for (RefreshToken refreshToken : refreshTokens) {
+            refreshToken.setRevoked(true);
+        }
+
+        refreshTokenRepository.saveAll(refreshTokens);
+    }
+
 }

@@ -1,14 +1,13 @@
 
 package com.fincore.identity.controller;
 
-import com.fincore.identity.dto.request.LoginRequest;
-import com.fincore.identity.dto.request.RefreshTokenRequest;
-import com.fincore.identity.dto.request.RegisterRequest;
+import com.fincore.identity.dto.request.*;
 import com.fincore.identity.dto.response.ApiResponse;
 import com.fincore.identity.dto.response.LoginResponse;
 import com.fincore.identity.dto.response.RefreshTokenResponse;
 import com.fincore.identity.dto.response.RegisterResponse;
 import com.fincore.identity.service.AuthService;
+import com.fincore.identity.service.PasswordResetService;
 import com.fincore.identity.service.RefreshTokenService;
 
 import com.fincore.identity.service.impl.EmailService;
@@ -30,6 +29,7 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
     private final EmailService emailService;
     private final EmailVerificationServiceImpl emailVerificationService;
+    private final PasswordResetService passwordResetService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<RegisterResponse>> register(
@@ -131,4 +131,45 @@ public class AuthController {
         System.out.println(">>> AUTH CONTROLLER REACHED <<<");
         return ResponseEntity.ok("Auth Controller is working");
     }
+
+
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request,
+            HttpServletRequest httpRequest) {
+
+        passwordResetService.forgotPassword(request.email());
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "If an account exists with this email, a password reset link has been sent.",
+                        httpRequest.getRequestURI(),
+                        null
+                )
+        );
+    }
+
+
+
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(
+            @Valid @RequestBody ResetPasswordRequest request,
+            HttpServletRequest httpRequest) {
+
+        passwordResetService.resetPassword(
+                request.token(),
+                request.newPassword()
+        );
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Password has been reset successfully. Please log in again.",
+                        httpRequest.getRequestURI(),
+                        null
+                )
+        );
+    }
+
 }

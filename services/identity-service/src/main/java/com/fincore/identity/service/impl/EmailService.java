@@ -60,4 +60,29 @@
                 throw e;
             }
         }
+
+
+        public void sendPasswordResetEmail(String to, String resetLink) {
+
+            SimpleMailMessage message = new SimpleMailMessage();
+
+            message.setTo(to);
+            message.setFrom("akshayambaliya8542@gmail.com");
+
+            message.setSubject("Reset your FinCore AI password");
+
+            message.setText(
+                    "Hello,\n\n" +
+                            "We received a request to reset your FinCore AI password.\n\n" +
+                            "Click the link below to reset your password:\n\n" +
+                            resetLink +
+                            "\n\nThis link expires in 15 minutes and can only be used once.\n\n" +
+                            "If you did not request a password reset, please ignore this email.\n\n" +
+                            "Regards,\n" +
+                            "FinCore AI Team"
+            );
+
+            mailSender.send(message);
+        }
+
     }
