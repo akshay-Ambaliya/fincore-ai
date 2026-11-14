@@ -3,6 +3,7 @@ package com.fincore.identity.service.impl;
 
 import com.fincore.identity.entity.PasswordResetTokens;
 import com.fincore.identity.entity.User;
+import com.fincore.identity.exceptions.InvalidCurrentPasswordException;
 import com.fincore.identity.repository.PasswordResetTokenRepository;
 import com.fincore.identity.repository.UserRepository;
 import com.fincore.identity.service.PasswordResetService;
@@ -91,6 +92,22 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         passwordResetTokenRepository.save(resetToken);
 
         // Revoke all existing refresh tokens
+        refreshTokenService.revokeAllRefreshTokens(user.getId());
+    }
+
+    @Override
+    public void changePassword(User user, String currentPassword, String newPassword) {
+        //1. Verify the Current Password :
+
+        if(!passwordEncoder.matches(currentPassword,user.getPasswordHash())){
+            throw new InvalidCurrentPasswordException(
+                    "Current password is incorrect"
+            );
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
         refreshTokenService.revokeAllRefreshTokens(user.getId());
     }
 }

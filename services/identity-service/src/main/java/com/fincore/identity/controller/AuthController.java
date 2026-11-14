@@ -6,6 +6,7 @@ import com.fincore.identity.dto.response.ApiResponse;
 import com.fincore.identity.dto.response.LoginResponse;
 import com.fincore.identity.dto.response.RefreshTokenResponse;
 import com.fincore.identity.dto.response.RegisterResponse;
+import com.fincore.identity.entity.User;
 import com.fincore.identity.service.AuthService;
 import com.fincore.identity.service.PasswordResetService;
 import com.fincore.identity.service.RefreshTokenService;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -170,6 +172,26 @@ public class AuthController {
                         null
                 )
         );
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ApiResponse<Void>> changePassword(
+            @Valid @RequestBody ChangePasswordRequestDTO request,
+            Authentication authentication,HttpServletRequest httpServletRequest) {
+
+        User user = (User) authentication.getPrincipal();
+        passwordResetService.changePassword(
+                user, request.getCurrentPassword(),request.getNewPassword()
+        );
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Password changed Successfully. Please Log in again",
+                        httpServletRequest.getRequestURI(),
+                        null
+                )
+        );
+
     }
 
 }
