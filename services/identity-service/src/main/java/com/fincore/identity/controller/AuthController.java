@@ -7,6 +7,7 @@ import com.fincore.identity.dto.response.LoginResponse;
 import com.fincore.identity.dto.response.RefreshTokenResponse;
 import com.fincore.identity.dto.response.RegisterResponse;
 import com.fincore.identity.entity.User;
+import com.fincore.identity.service.AccountManagementService;
 import com.fincore.identity.service.AuthService;
 import com.fincore.identity.service.PasswordResetService;
 import com.fincore.identity.service.RefreshTokenService;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +34,7 @@ public class AuthController {
     private final EmailService emailService;
     private final EmailVerificationServiceImpl emailVerificationService;
     private final PasswordResetService passwordResetService;
+    private final AccountManagementService accountManagementService;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<RegisterResponse>> register(
@@ -194,4 +197,25 @@ public class AuthController {
 
     }
 
+    @DeleteMapping("/account")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ApiResponse<Void>> deleteAccount(
+            @RequestBody @Valid DeleteAccountRequest request,
+            Authentication authentication) {
+
+        User user = (User) authentication.getPrincipal();
+
+        accountManagementService.deleteAccount(
+                user,
+                request.currentPassword()
+        );
+
+        return ResponseEntity.ok(
+                ApiResponse.success(
+                        "Account deleted successfully",
+                        "/api/auth/account",
+                        null
+                )
+        );
+    }
 }

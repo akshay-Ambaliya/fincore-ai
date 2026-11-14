@@ -73,6 +73,20 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(InvalidPasswordResetTokenException.class)
+    public ResponseEntity<ApiResponse<Void>> handleInvalidPasswordResetToken(
+            InvalidPasswordResetTokenException exception,
+            HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(
+                        exception.getMessage(),
+                        request.getRequestURI(),
+                        null
+                ));
+    }
+
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiResponse<Void>> handleAccessDenied(
             AccessDeniedException exception,

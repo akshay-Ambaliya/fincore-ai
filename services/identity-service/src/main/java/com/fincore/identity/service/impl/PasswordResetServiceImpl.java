@@ -4,6 +4,7 @@ package com.fincore.identity.service.impl;
 import com.fincore.identity.entity.PasswordResetTokens;
 import com.fincore.identity.entity.User;
 import com.fincore.identity.exceptions.InvalidCurrentPasswordException;
+import com.fincore.identity.exceptions.InvalidPasswordResetTokenException;
 import com.fincore.identity.repository.PasswordResetTokenRepository;
 import com.fincore.identity.repository.UserRepository;
 import com.fincore.identity.service.PasswordResetService;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -50,50 +52,52 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         emailService.sendPasswordResetEmail(user.getEmail(), resetLink);
     }
 
+
     @Override
     @Transactional
     public void resetPassword(String rawToken, String newPassword) {
 
-        String tokenHash =
-                passwordResetTokenService.hashToken(rawToken);
+        String tokenHash = passwordResetTokenService.hashToken(rawToken);
 
         PasswordResetTokens resetToken =
                 passwordResetTokenRepository.findByTokenHash(tokenHash)
                         .orElseThrow(() ->
-                                new IllegalArgumentException(
+                                new InvalidPasswordResetTokenException(
                                         "Invalid or expired password reset token"
                                 )
                         );
 
-        // Check whether token was already used
-        if (resetToken.getUsedAt() != null) {
-            throw new IllegalArgumentException(
-                    "Password reset token has already been used"
-            );
-        }
+        Instant now = Instant.now();
 
-        // Check expiration
-        if (resetToken.getExpiresAt().isBefore(Instant.now())) {
-            throw new IllegalArgumentException(
-                    "Password reset token has expired"
+        if (resetToken.getUsedAt() != null ||
+                resetToken.getExpiresAt().isBefore(now)) {
+
+            throw new InvalidPasswordResetTokenException(
+                    "Invalid or expired password reset token"
             );
         }
 
         User user = resetToken.getUser();
 
-        // Encode and update the new password
+        // Update password
         user.setPasswordHash(passwordEncoder.encode(newPassword));
-
         userRepository.save(user);
 
-        // Mark token as used
-        resetToken.setUsedAt(Instant.now());
+        // Invalidate all outstanding reset tokens
+        List<PasswordResetTokens> unusedTokens =
+                passwordResetTokenRepository
+                        .findAllByUser_IdAndUsedAtIsNull(user.getId());
 
-        passwordResetTokenRepository.save(resetToken);
+        for (PasswordResetTokens token : unusedTokens) {
+            token.setUsedAt(now);
+        }
 
-        // Revoke all existing refresh tokens
+        passwordResetTokenRepository.saveAll(unusedTokens);
+
+        // Revoke all refresh tokens
         refreshTokenService.revokeAllRefreshTokens(user.getId());
     }
+
 
     @Override
     public void changePassword(User user, String currentPassword, String newPassword) {
