@@ -1,15 +1,15 @@
 $kind: http-request
-url: http://localhost:8083/api/organizations?userId=2
+url: http://localhost:8083/api/organizations?userId=37
 method: POST
 queryParams:
-  userId: "2"
+  userId: "37"
 body:
   type: json
   content: "{\r
 
-    \    \"name\": \"ABC Technologies\",\r
+    \    \"name\": \"FinCore Technologies\",\r
 
-    \    \"description\": \"Software development company\",\r
+    \    \"description\": \"Financial technology company\",\r
 
     \    \"organizationType\": \"BUSINESS\"\r
 

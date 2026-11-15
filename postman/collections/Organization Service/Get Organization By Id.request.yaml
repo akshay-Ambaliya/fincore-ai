@@ -1,0 +1,6 @@
+$kind: http-request
+url: http://localhost:8083/api/organizations/1?userId={userId}
+method: GET
+queryParams:
+  userId: "{userId}"
+order: 3000

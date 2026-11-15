@@ -17,6 +17,36 @@ import java.util.Map;
 @Slf4j
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(OrganizationNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleOrganizationNotFound(
+            OrganizationNotFoundException exception,
+            HttpServletRequest request) {
+
+        log.warn("Organization not found: {}", exception.getMessage());
+
+        return buildErrorResponse(
+                HttpStatus.NOT_FOUND,
+                exception.getMessage(),
+                null,
+                request
+        );
+    }
+
+    @ExceptionHandler(OrganizationAccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleOrganizationAccessDenied(
+            OrganizationAccessDeniedException exception,
+            HttpServletRequest request) {
+
+        log.warn("Organization access denied: {}", exception.getMessage());
+
+        return buildErrorResponse(
+                HttpStatus.FORBIDDEN,
+                exception.getMessage(),
+                null,
+                request
+        );
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(
             MethodArgumentNotValidException exception,

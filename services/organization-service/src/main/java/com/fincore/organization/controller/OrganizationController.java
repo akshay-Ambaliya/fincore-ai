@@ -41,4 +41,30 @@ public class OrganizationController {
                 .status(HttpStatus.CREATED)
                 .body(apiResponse);
     }
+
+
+    @GetMapping("/{organizationId}")
+    public ResponseEntity<ApiResponse<OrganizationResponse>> getOrganizationById(
+            @PathVariable("organizationId") Long organizationId,
+            @RequestParam("userId") Long userId,
+            HttpServletRequest httpRequest
+    ) {
+
+        OrganizationResponse response =
+                organizationService.getOrganizationById(
+                        organizationId,
+                        userId
+                );
+
+        ApiResponse<OrganizationResponse> apiResponse =
+                ApiResponse.success(
+                        HttpStatus.OK.value(),
+                        "Organization fetched successfully",
+                        httpRequest.getRequestURI(),
+                        response
+                );
+
+        return ResponseEntity.ok(apiResponse);
+    }
+
 }

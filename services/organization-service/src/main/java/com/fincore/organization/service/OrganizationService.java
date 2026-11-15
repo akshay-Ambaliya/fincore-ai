@@ -10,4 +10,11 @@ public interface OrganizationService {
             CreateOrganizationRequest request,
             Long userId
     );
+
+
+    OrganizationResponse getOrganizationById(
+            Long organizationId,
+            Long userId
+    );
+
 }
