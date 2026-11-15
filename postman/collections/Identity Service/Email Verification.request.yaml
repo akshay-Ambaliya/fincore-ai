@@ -1,0 +1,6 @@
+$kind: http-request
+url: http://localhost:8081/api/auth/verify-email?token=<RAW_TOKEN>
+method: GET
+queryParams:
+  token: <RAW_TOKEN>
+order: 7067

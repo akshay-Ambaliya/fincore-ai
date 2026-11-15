@@ -1,0 +1,11 @@
+$kind: http-request
+url: http://localhost:8081/api/auth/logout
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"refreshToken\": \"<REFRESH_TOKEN>\"\r
+
+    }"
+order: 6000

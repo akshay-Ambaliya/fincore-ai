@@ -1,0 +1,17 @@
+$kind: http-request
+url: http://localhost:8083/api/organizations?userId=2
+method: POST
+queryParams:
+  userId: "2"
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"ABC Technologies\",\r
+
+    \    \"description\": \"Software development company\",\r
+
+    \    \"organizationType\": \"BUSINESS\"\r
+
+    }"
+order: 1000

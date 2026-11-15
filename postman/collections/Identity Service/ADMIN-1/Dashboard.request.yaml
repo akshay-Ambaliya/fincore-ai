@@ -1,0 +1,4 @@
+$kind: http-request
+url: http://localhost:8081/api/admin/dashboard
+method: GET
+order: 1000

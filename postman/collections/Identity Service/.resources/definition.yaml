@@ -1,0 +1,5 @@
+$kind: collection
+auth:
+  - id: f9146898-c255-4727-b59a-eb9289668a60
+    type: bearer
+    name: Bearer Token

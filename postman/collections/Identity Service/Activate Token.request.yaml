@@ -1,0 +1,4 @@
+$kind: http-request
+url: http://localhost:8081/api/admin/users/{userId}/activate
+method: PATCH
+order: 12000

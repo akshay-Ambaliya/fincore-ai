@@ -1,0 +1,32 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: organization-service
+
+  datasource:
+    url: ${ORGANIZATION_DB_URL:jdbc:postgresql://localhost:5433/organization_db}
+    username: ${ORGANIZATION_DB_USERNAME:organization_user}
+    password: ${ORGANIZATION_DB_PASSWORD:organization_local_dev}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
+    locations: classpath:db/migration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

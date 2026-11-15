@@ -1,0 +1,11 @@
+$kind: http-request
+url: http://localhost:8081/api/auth/account
+method: DELETE
+body:
+  type: json
+  content: "{\r
+
+    \  \"currentPassword\": \"UserCurrentPassword123\"\r
+
+    }"
+order: 13000
