@@ -1,0 +1,6 @@
+$kind: http-request
+url: http://localhost:8082/internal/users/2/verification
+method: GET
+headers:
+  X-Internal-Service-Key: MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE=
+order: 14000

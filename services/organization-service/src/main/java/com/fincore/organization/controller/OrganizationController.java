@@ -1,8 +1,10 @@
 
 package com.fincore.organization.controller;
 
+import com.fincore.organization.dto.request.AddOrganizationMemberRequest;
 import com.fincore.organization.dto.request.CreateOrganizationRequest;
 import com.fincore.organization.dto.response.ApiResponse;
+import com.fincore.organization.dto.response.OrganizationMemberResponse;
 import com.fincore.organization.dto.response.OrganizationResponse;
 import com.fincore.organization.service.OrganizationService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -88,4 +90,31 @@ public class OrganizationController {
 
         return ResponseEntity.ok(apiResponse);
     }
+
+
+    @PostMapping("/{organizationId}/members")
+    public ResponseEntity<ApiResponse<OrganizationMemberResponse>>
+    addOrganizationMember(
+            @PathVariable("organizationId") Long organizationId,
+            @RequestParam("requesterUserId") Long requesterUserId,
+            @Valid @RequestBody AddOrganizationMemberRequest request,
+            HttpServletRequest httpRequest) {
+
+        OrganizationMemberResponse response =
+                organizationService.addOrganizationMember(
+                        organizationId,
+                        requesterUserId,
+                        request
+                );
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(
+                        HttpStatus.CREATED.value(),
+                        "Organization member added successfully",
+                        httpRequest.getRequestURI(),
+                        response
+                ));
+    }
+
+
 }

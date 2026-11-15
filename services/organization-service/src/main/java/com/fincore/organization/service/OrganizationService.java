@@ -1,7 +1,9 @@
 
 package com.fincore.organization.service;
 
+import com.fincore.organization.dto.request.AddOrganizationMemberRequest;
 import com.fincore.organization.dto.request.CreateOrganizationRequest;
+import com.fincore.organization.dto.response.OrganizationMemberResponse;
 import com.fincore.organization.dto.response.OrganizationResponse;
 import com.fincore.organization.entity.OrganizationMember;
 import com.fincore.organization.enums.OrganizationMemberStatus;
@@ -22,5 +24,13 @@ public interface OrganizationService {
     );
 
     List<OrganizationResponse> getMyOrganizations(Long userId);
+
+
+    OrganizationMemberResponse addOrganizationMember(
+            Long organizationId,
+            Long requesterUserId,
+            AddOrganizationMemberRequest request
+    );
+
 
 }

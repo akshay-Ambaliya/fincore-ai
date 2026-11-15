@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestControllerAdvice
@@ -30,6 +32,26 @@ public class GlobalExceptionHandler {
                 null,
                 request
         );
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<Map<String, Object>> handleResponseStatusException(
+            ResponseStatusException exception,
+            HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.valueOf(
+                exception.getStatusCode().value()
+        );
+
+        Map<String, Object> body = new LinkedHashMap<>();
+
+        body.put("success", false);
+        body.put("status", status.value());
+        body.put("message", exception.getReason());
+        body.put("path", request.getRequestURI());
+        body.put("timestamp", Instant.now());
+
+        return ResponseEntity.status(status).body(body);
     }
 
     @ExceptionHandler(OrganizationAccessDeniedException.class)

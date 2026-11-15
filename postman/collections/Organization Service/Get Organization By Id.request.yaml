@@ -1,6 +1,6 @@
 $kind: http-request
-url: http://localhost:8083/api/organizations/1?userId={userId}
+url: http://localhost:8083/api/organizations/3?userId=3
 method: GET
 queryParams:
-  userId: "{userId}"
+  userId: "3"
 order: 3000

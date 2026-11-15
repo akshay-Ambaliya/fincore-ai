@@ -1,0 +1,15 @@
+$kind: http-request
+url: http://localhost:8083/api/organizations/1/members?requesterUserId=2
+method: GET
+queryParams:
+  requesterUserId: "2"
+body:
+  type: json
+  content: "{\r
+
+    \  \"userId\": 37,\r
+
+    \  \"role\": \"MEMBER\"\r
+
+    }"
+order: 5000

@@ -2,6 +2,14 @@ server:
   port: 8083
 
 spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          identity-service:
+            connectTimeout: 3000
+            readTimeout: 5000
+            loggerLevel: basic
   application:
     name: organization-service
 
@@ -30,3 +38,12 @@ management:
     web:
       exposure:
         include: health,info
+
+
+identity:
+  service:
+    base-url: ${IDENTITY_SERVICE_BASE_URL:http://localhost:8082}
+
+internal:
+  service:
+    api-key: ${INTERNAL_SERVICE_API_KEY}

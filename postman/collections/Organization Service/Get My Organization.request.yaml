@@ -1,4 +1,6 @@
 $kind: http-request
-url: ""
+url: http://localhost:8083/api/organizations?userId=37
 method: GET
+queryParams:
+  userId: "37"
 order: 4000
