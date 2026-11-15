@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/organizations")
 @RequiredArgsConstructor
@@ -67,4 +69,23 @@ public class OrganizationController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<OrganizationResponse>>> getMyOrganizations(
+            @RequestParam("userId") Long userId,
+            HttpServletRequest httpRequest
+    ) {
+
+        List<OrganizationResponse> response =
+                organizationService.getMyOrganizations(userId);
+
+        ApiResponse<List<OrganizationResponse>> apiResponse =
+                ApiResponse.success(
+                        HttpStatus.OK.value(),
+                        "Organizations fetched successfully",
+                        httpRequest.getRequestURI(),
+                        response
+                );
+
+        return ResponseEntity.ok(apiResponse);
+    }
 }

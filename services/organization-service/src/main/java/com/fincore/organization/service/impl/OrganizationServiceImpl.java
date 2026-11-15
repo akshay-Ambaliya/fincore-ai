@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrganizationServiceImpl implements OrganizationService {
@@ -116,6 +118,37 @@ public class OrganizationServiceImpl implements OrganizationService {
                 organization.getCreatedAt(),
                 organization.getUpdatedAt()
         );
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OrganizationResponse> getMyOrganizations(Long userId) {
+
+        List<OrganizationMember> memberships =
+                organizationMemberRepository
+                        .findAllByUserIdAndStatusAndOrganization_Status(
+                                userId,
+                                OrganizationMemberStatus.ACTIVE,
+                                "ACTIVE"
+                        );
+
+        return memberships.stream()
+                .map(member -> {
+                    Organization organization = member.getOrganization();
+
+                    return new OrganizationResponse(
+                            organization.getId(),
+                            organization.getName(),
+                            organization.getSlug(),
+                            organization.getDescription(),
+                            organization.getOrganizationType(),
+                            organization.getStatus(),
+                            organization.getCreatedByUserId(),
+                            organization.getCreatedAt(),
+                            organization.getUpdatedAt()
+                    );
+                })
+                .toList();
     }
 
 }

@@ -32,4 +32,12 @@ public interface OrganizationMemberRepository
             Long organizationId,
             Long userId
     );
+
+
+    List<OrganizationMember> findAllByUserIdAndStatusAndOrganization_Status(
+            Long userId,
+            OrganizationMemberStatus status,
+            String organizationStatus
+    );
+
 }
