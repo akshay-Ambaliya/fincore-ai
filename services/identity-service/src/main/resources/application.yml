@@ -47,3 +47,7 @@ jwt:
 app:
   verification:
     base-url: http://localhost:8082/api/auth/verify-email
+
+internal:
+  service:
+    api-key: ${INTERNAL_SERVICE_API_KEY}
